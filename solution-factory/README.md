@@ -42,3 +42,10 @@ Open repository in VS Code and “Reopen in Container”. Container includes .NE
 - Add test projects.
 - Integrate real OAuth/OIDC and email provider.
 - Add persistent storage + Key Vault + Azure deployment pipeline.
+
+
+## Backend tests
+```bash
+cd solution-factory/backend
+dotnet test tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj
+```

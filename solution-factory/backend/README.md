@@ -1,6 +1,6 @@
 # Backend - Cloud Solution Factory API
 
-ASP.NET Core Minimal API (.NET 10) implementing demo auth flow for use case 001.
+ASP.NET Core Minimal API (.NET 10 target architecture) for demo auth flow.
 
 ## Endpoints
 - `GET /health`
@@ -10,4 +10,15 @@ ASP.NET Core Minimal API (.NET 10) implementing demo auth flow for use case 001.
 - `POST /auth/resend-verification`
 - `GET /me`
 
-Swagger enabled in Development.
+## Run locally
+```bash
+cd solution-factory/backend/src/CloudSolutionFactory.Api
+dotnet restore
+dotnet run
+```
+
+## Run tests
+```bash
+cd solution-factory/backend
+dotnet test tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj
+```
