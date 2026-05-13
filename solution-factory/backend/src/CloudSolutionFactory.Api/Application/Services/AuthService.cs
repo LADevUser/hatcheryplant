@@ -21,27 +21,30 @@ public sealed class AuthService
 
     public async Task<RegisterEmailResponse> RegisterEmailAsync(RegisterEmailRequest request, CancellationToken ct)
     {
-        var existing = await _users.GetByEmailAsync(request.TenantId, request.Email, ct);
+        var tenantId = Guid.TryParse(request.TenantId, out var parsedTenantId) ? parsedTenantId : throw new InvalidOperationException("TenantId must be a GUID.");
+        var existing = await _users.GetByEmailAsync(tenantId, request.Email, ct);
         if (existing is not null) throw new InvalidOperationException("User already exists.");
 
         var user = new User
         {
-            TenantId = request.TenantId,
+            TenantId = tenantId,
             Email = request.Email.Trim().ToLowerInvariant(),
             PasswordHash = Hash(request.Password),
             Status = UserStatus.PendingEmailVerification,
             AuthProvider = AuthProvider.EmailPassword,
-            Role = PlatformRole.Member
+            Role = Role.Member
         };
 
         await _users.AddAsync(user, ct);
         var token = await IssueVerificationTokenAsync(user.Id, ct);
-        return new RegisterEmailResponse("Registration successful. Please verify your email.", token[..12]);
+        var link = $"/auth/verify-email?token={token}";
+        return new RegisterEmailResponse("Registration successful. Please verify your email.", link);
     }
 
     public async Task<AuthResponse> LoginEmailAsync(LoginEmailRequest request, CancellationToken ct)
     {
-        var user = await _users.GetByEmailAsync(request.TenantId, request.Email, ct)
+        var tenantId = Guid.TryParse(request.TenantId, out var parsedTenantId) ? parsedTenantId : throw new InvalidOperationException("TenantId must be a GUID.");
+        var user = await _users.GetByEmailAsync(tenantId, request.Email, ct)
             ?? throw new UnauthorizedAccessException("Invalid credentials.");
 
         if (user.PasswordHash != Hash(request.Password)) throw new UnauthorizedAccessException("Invalid credentials.");
@@ -71,12 +74,13 @@ public sealed class AuthService
 
     public async Task<AuthResponse> ResendVerificationAsync(ResendVerificationRequest request, CancellationToken ct)
     {
-        var user = await _users.GetByEmailAsync(request.TenantId, request.Email, ct)
+        var tenantId = Guid.TryParse(request.TenantId, out var parsedTenantId) ? parsedTenantId : throw new InvalidOperationException("TenantId must be a GUID.");
+        var user = await _users.GetByEmailAsync(tenantId, request.Email, ct)
             ?? throw new KeyNotFoundException("User not found.");
 
         if (user.Status == UserStatus.Active) return new AuthResponse("Account already active.");
         var token = await IssueVerificationTokenAsync(user.Id, ct);
-        return new AuthResponse($"Verification email queued. Token preview: {token[..12]}");
+        return new AuthResponse("Verification email queued.", VerificationLink: $"/auth/verify-email?token={token}");
     }
 
     private async Task<string> IssueVerificationTokenAsync(Guid userId, CancellationToken ct)

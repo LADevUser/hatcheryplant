@@ -1,0 +1,31 @@
+name: Backend CI
+on: [push, pull_request]
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solution-factory/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.300
+      - name: Restore API
+        run: dotnet restore src/CloudSolutionFactory.Api/CloudSolutionFactory.Api.csproj
+      - name: Restore tests (if present)
+        run: |
+          if [ -f tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj ]; then
+            dotnet restore tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj
+          else
+            echo 'No backend test project found. Skipping test restore.'
+          fi
+      - name: Build API
+        run: dotnet build src/CloudSolutionFactory.Api/CloudSolutionFactory.Api.csproj --no-restore --configuration Release
+      - name: Test backend (safe)
+        run: |
+          if [ -f tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj ]; then
+            dotnet test tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj --configuration Release
+          else
+            echo 'No backend test project found. Skipping tests.'
+          fi
