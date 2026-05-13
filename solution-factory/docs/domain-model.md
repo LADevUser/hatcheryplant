@@ -1,6 +1,14 @@
-# Domain Model
-- User: tenant scoped identity, provider, status, role.
-- Tenant/Workspace: container for users and future factory resources.
-- Role: owner/admin/member for platform-level authorization.
+# Domain model
 
-Platform domain is isolated from future factory domain modules.
+Core entities:
+- User
+- Tenant
+- Workspace
+- RoleModel
+- EmailVerificationToken
+
+User status:
+- PendingEmailVerification
+- Active
+- VerificationExpired
+- Disabled

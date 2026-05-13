@@ -1,17 +1,13 @@
-# Backend
+# Backend - Cloud Solution Factory API
 
-Minimal API with in-memory repositories and auth skeleton.
+ASP.NET Core Minimal API (.NET 10) implementing demo auth flow for use case 001.
 
 ## Endpoints
-- POST `/auth/register/email`
-- POST `/auth/login/email`
-- GET `/auth/verify-email?token=...`
-- POST `/auth/resend-verification`
-- GET `/me`
-- GET `/health`
+- `GET /health`
+- `POST /auth/register/email`
+- `POST /auth/login/email`
+- `GET /auth/verify-email?token=...`
+- `POST /auth/resend-verification`
+- `GET /me`
 
-## Run
-```bash
-cd src/CloudSolutionFactory.Api
-dotnet run
-```
+Swagger enabled in Development.
