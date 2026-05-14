@@ -35,3 +35,19 @@ az deployment group create \
 - `frontendUrl`
 - `storageAccountNameOutput`
 - `keyVaultNameOutput`
+
+
+## GitHub Actions pipelines
+- `infra-ci.yml`: validates Bicep on PRs/changes in `infra/`.
+- `infra-deploy-dev.yml`: validates + deploys dev infrastructure (push to `main` or manual dispatch).
+
+### Required GitHub configuration
+Set repository/environment secrets:
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
+
+Set repository/environment variable:
+- `AZURE_DEV_RESOURCE_GROUP`
+
+Recommended: use GitHub OIDC with `azure/login@v2` and protect the `dev` environment with required reviewers.
