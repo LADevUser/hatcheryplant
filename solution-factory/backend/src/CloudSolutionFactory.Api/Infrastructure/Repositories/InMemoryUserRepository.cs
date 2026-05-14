@@ -7,7 +7,7 @@ public sealed class InMemoryUserRepository : IUserRepository
 {
     private readonly List<User> _users = new();
 
-    public Task<User?> GetByEmailAsync(string tenantId, string email, CancellationToken ct)
+    public Task<User?> GetByEmailAsync(Guid tenantId, string email, CancellationToken ct)
         => Task.FromResult(_users.FirstOrDefault(u => u.TenantId == tenantId && u.Email == email.Trim().ToLowerInvariant()));
 
     public Task<User?> GetByIdAsync(Guid userId, CancellationToken ct)

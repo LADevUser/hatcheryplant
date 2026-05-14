@@ -1,0 +1,8 @@
+{
+  "name": "cloud-solution-factory",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-10.0-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {"version": "lts"}
+  },
+  "postCreateCommand": "dotnet --info && node --version && npm --version"
+}
