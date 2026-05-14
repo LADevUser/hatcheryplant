@@ -49,3 +49,11 @@ Open repository in VS Code and “Reopen in Container”. Container includes .NE
 cd solution-factory/backend
 dotnet test tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj
 ```
+
+
+## Frontend tests
+```bash
+cd solution-factory/frontend
+npm install
+npm run test:run
+```

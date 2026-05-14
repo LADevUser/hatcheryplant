@@ -16,5 +16,5 @@ jobs:
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
       - name: Build
         run: npm run build
-      - name: Test (safe)
-        run: npm test --if-present
+      - name: Test
+        run: npm run test:run
