@@ -1,7 +1,0 @@
-name: CI Placeholder
-on: [pull_request]
-jobs:
-  placeholder:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Add build/test pipeline in next iteration"
