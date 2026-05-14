@@ -1,13 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Link, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
-import { api } from './api/client';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRoutes } from './App';
 
-function Landing() { return <div><h1>Cloud Solution Factory</h1><Link to='/register'>Create account</Link> | <Link to='/login'>Login</Link></div>; }
-function Register() { const nav=useNavigate(); const submit=async e=>{e.preventDefault(); const f=new FormData(e.target); const r=await api('/auth/register/email',{method:'POST',body:JSON.stringify({tenantId:f.get('tenantId'),email:f.get('email'),password:f.get('password')})}); alert(r.message); nav('/verification-pending');}; return <form onSubmit={submit}><h2>Register</h2><input name='tenantId' placeholder='tenant'/><input name='email' placeholder='email'/><input name='password' type='password'/><button>Create</button><p>OAuth providers: Google/Microsoft/GitHub (stub in backend roadmap).</p></form>; }
-function Login() { const nav=useNavigate(); const submit=async e=>{e.preventDefault(); const f=new FormData(e.target); const r=await api('/auth/login/email',{method:'POST',body:JSON.stringify({tenantId:f.get('tenantId'),email:f.get('email'),password:f.get('password')})}); if(r.accessToken){localStorage.setItem('accessToken',r.accessToken); nav('/dashboard');} else alert(r.message || 'Login failed');}; return <form onSubmit={submit}><h2>Login</h2><input name='tenantId'/><input name='email'/><input name='password' type='password'/><button>Login</button></form>; }
-function Pending(){return <div><h2>Verification Pending</h2><p>Check your email and verify within 24 hours.</p></div>}
-function VerifyResult(){ const [sp]=useSearchParams(); const [m,setM]=React.useState('Verifying...'); React.useEffect(()=>{api(`/auth/verify-email?token=${sp.get('token')}`).then(r=>setM(r.message));},[]); return <div><h2>Email Verification</h2><p>{m}</p><Link to='/login'>Go to login</Link></div>}
-function Dashboard(){const [me,setMe]=React.useState(null); React.useEffect(()=>{api('/me',{headers:{Authorization:`Bearer ${localStorage.getItem('accessToken')||''}`}}).then(setMe);},[]); return <div><h2>Welcome Dashboard</h2><pre>{JSON.stringify(me,null,2)}</pre></div>}
-
-createRoot(document.getElementById('root')).render(<BrowserRouter><Routes><Route path='/' element={<Landing/>}/><Route path='/register' element={<Register/>}/><Route path='/login' element={<Login/>}/><Route path='/verification-pending' element={<Pending/>}/><Route path='/verify-email' element={<VerifyResult/>}/><Route path='/dashboard' element={<Dashboard/>}/></Routes></BrowserRouter>);
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  </React.StrictMode>
+);

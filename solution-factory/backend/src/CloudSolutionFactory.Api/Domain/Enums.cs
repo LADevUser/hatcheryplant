@@ -4,7 +4,8 @@ public enum UserStatus
 {
     PendingEmailVerification,
     Active,
-    Suspended
+    VerificationExpired,
+    Disabled
 }
 
 public enum AuthProvider
@@ -15,7 +16,7 @@ public enum AuthProvider
     GitHub
 }
 
-public enum PlatformRole
+public enum Role
 {
     Owner,
     Admin,

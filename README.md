@@ -1,3 +1,5 @@
-# hatcheryplant
+# Cloud Solution Factory Platform Repository
 
-Contains the initial `solution-factory/` monorepo scaffold for Cloud Solution Factory Platform.
+Primary project content is under `solution-factory/`.
+
+See `solution-factory/README.md` for run instructions and scope.
