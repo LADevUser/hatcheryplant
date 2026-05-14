@@ -1,15 +1,18 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { AppRoutes } from '../App';
 
-const mockApi = {
-  registerEmail: vi.fn().mockResolvedValue({ verificationLink: '/auth/verify-email?token=abc' }),
-  loginEmail: vi.fn().mockResolvedValue({ accessToken: 'demo-token' }),
-  verifyEmail: vi.fn().mockResolvedValue({ message: 'Email verification successful.' }),
-  me: vi.fn().mockResolvedValue({ email: 'tester@example.com' })
-};
+const { mockApi } = vi.hoisted(() => ({
+  mockApi: {
+    registerEmail: vi.fn(),
+    loginEmail: vi.fn(),
+    verifyEmail: vi.fn(),
+    me: vi.fn()
+  }
+}));
 
 vi.mock('../api/client', () => ({ api: mockApi }));
+
+import { AppRoutes } from '../App';
 
 function renderAt(path) {
   return render(
@@ -23,6 +26,10 @@ describe('App route smoke tests', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
+    mockApi.registerEmail.mockResolvedValue({ verificationLink: '/auth/verify-email?token=abc' });
+    mockApi.loginEmail.mockResolvedValue({ accessToken: 'demo-token' });
+    mockApi.verifyEmail.mockResolvedValue({ message: 'Email verification successful.' });
+    mockApi.me.mockResolvedValue({ email: 'tester@example.com' });
   });
 
   it('renders landing page', () => {
