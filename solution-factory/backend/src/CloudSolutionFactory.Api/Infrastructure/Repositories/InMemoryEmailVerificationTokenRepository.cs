@@ -14,7 +14,7 @@ public sealed class InMemoryEmailVerificationTokenRepository : IEmailVerificatio
     }
 
     public Task<EmailVerificationToken?> GetByTokenAsync(string token, CancellationToken ct)
-        => Task.FromResult(_tokens.FirstOrDefault(t => t.Token == token));
+    => Task.FromResult(_tokens.FirstOrDefault(t => t.Token == token));
 
     public Task InvalidateForUserAsync(Guid userId, CancellationToken ct)
     {
