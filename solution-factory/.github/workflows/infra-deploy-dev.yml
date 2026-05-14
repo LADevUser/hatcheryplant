@@ -1,0 +1,57 @@
+name: Infra Deploy Dev (Bicep)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'solution-factory/infra/**'
+      - '.github/workflows/infra-*.yml'
+
+concurrency:
+  group: infra-dev-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    defaults:
+      run:
+        working-directory: solution-factory
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Validate Bicep deployment
+        run: |
+          az deployment group validate \
+            --resource-group "${{ vars.AZURE_DEV_RESOURCE_GROUP }}" \
+            --template-file infra/bicep/main.bicep \
+            --parameters @infra/bicep/main.dev.parameters.json
+
+      - name: Deploy Bicep to dev
+        id: deploy
+        run: |
+          az deployment group create \
+            --resource-group "${{ vars.AZURE_DEV_RESOURCE_GROUP }}" \
+            --template-file infra/bicep/main.bicep \
+            --parameters @infra/bicep/main.dev.parameters.json \
+            --query properties.outputs > infra-outputs.json
+
+      - name: Publish infra outputs
+        run: |
+          echo "## Dev Infra Outputs" >> $GITHUB_STEP_SUMMARY
+          cat infra-outputs.json >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload outputs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: infra-dev-outputs
+          path: solution-factory/infra-outputs.json
