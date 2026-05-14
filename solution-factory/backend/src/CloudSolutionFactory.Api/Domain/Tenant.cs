@@ -1,8 +1,8 @@
 namespace CloudSolutionFactory.Api.Domain;
 
-public sealed class TenantWorkspace
+public sealed class Tenant
 {
-    public required string Id { get; init; }
+    public Guid Id { get; init; } = Guid.NewGuid();
     public required string Name { get; init; }
     public DateTimeOffset CreatedAtUtc { get; init; } = DateTimeOffset.UtcNow;
 }

@@ -62,3 +62,6 @@ app.MapGet("/me", async (HttpRequest request, SessionService sessions, IUserRepo
 });
 
 app.Run();
+
+public partial class Program { }
+

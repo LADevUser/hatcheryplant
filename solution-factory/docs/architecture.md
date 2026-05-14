@@ -1,7 +1,6 @@
 # Architecture
-- Monorepo for coordinated platform evolution.
-- Frontend React SPA.
-- Backend ASP.NET Core Minimal API (REST).
-- In-memory repositories behind interfaces, ready for Azure Storage.
-- appsettings + environment variables, ready for Key Vault.
-- Multi-tenant modeled with tenantId on core entities.
+
+Monorepo with React frontend and ASP.NET Core Minimal API backend (REST).
+Target hosting is Azure App Service.
+Storage abstraction is repository interfaces with in-memory implementation, designed to swap to Azure Storage/database later.
+Configuration uses appsettings + env vars; Key Vault planned.

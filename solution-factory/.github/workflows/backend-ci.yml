@@ -1,0 +1,42 @@
+name: Backend CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solution-factory/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.300
+      - name: Restore API
+        run: dotnet restore src/CloudSolutionFactory.Api/CloudSolutionFactory.Api.csproj
+      - name: Restore tests (if present)
+        run: |
+          if [ -f tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj ]; then
+            dotnet restore tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj
+          else
+            echo 'No backend test project found. Skipping test restore.'
+          fi
+      - name: Build API (warnings as errors)
+        run: dotnet build src/CloudSolutionFactory.Api/CloudSolutionFactory.Api.csproj --no-restore --configuration Release
+      - name: Format check
+        run: dotnet format src/CloudSolutionFactory.Api/CloudSolutionFactory.Api.csproj --verify-no-changes
+      - name: Test backend with coverage (safe)
+        run: |
+          if [ -f tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj ]; then
+            dotnet test tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj --configuration Release --collect:"XPlat Code Coverage"
+          else
+            echo 'No backend test project found. Skipping tests.'
+          fi
+      - name: Upload test coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: solution-factory/backend/tests/**/TestResults
