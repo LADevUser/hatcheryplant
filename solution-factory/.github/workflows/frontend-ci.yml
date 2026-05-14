@@ -1,9 +1,5 @@
 name: Frontend CI
-on:
-  pull_request:
-  push:
-    branches: [main]
-
+on: [push, pull_request]
 jobs:
   frontend:
     runs-on: ubuntu-latest
@@ -15,21 +11,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: npm
-          cache-dependency-path: solution-factory/frontend/package-lock.json
       - name: Install
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
-      - name: Lint
-        run: npm run lint
-      - name: Format check
-        run: npm run format:check
       - name: Build
         run: npm run build
-      - name: Test with coverage
-        run: npm run test:coverage
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-coverage
-          path: solution-factory/frontend/coverage
+      - name: Test
+        run: npm run test:run

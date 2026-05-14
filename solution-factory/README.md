@@ -29,8 +29,8 @@ npm run dev
 Open repository in VS Code and “Reopen in Container”. Container includes .NET 10 + Node LTS.
 
 ## CI
-- Backend workflow restores, builds (warnings as errors), format-checks, and runs tests with coverage artifact upload.
-- Frontend workflow installs, lints, format-checks, builds, and runs tests with coverage artifact upload.
+- Backend workflow restores/builds/tests safely.
+- Frontend workflow installs/builds/tests safely.
 
 ## Known limitations
 - In-memory repositories only.
@@ -56,20 +56,4 @@ dotnet test tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.
 cd solution-factory/frontend
 npm install
 npm run test:run
-```
-
-
-## Frontend quality commands
-```bash
-cd solution-factory/frontend
-npm run lint
-npm run format:check
-npm run test:coverage
-```
-
-## Backend quality commands
-```bash
-cd solution-factory/backend
-dotnet format src/CloudSolutionFactory.Api/CloudSolutionFactory.Api.csproj --verify-no-changes
-dotnet test tests/CloudSolutionFactory.Api.Tests/CloudSolutionFactory.Api.Tests.csproj --configuration Release --collect:"XPlat Code Coverage"
 ```

@@ -9,8 +9,6 @@ Set API base URL with `VITE_API_BASE_URL` (default `http://localhost:5254`).
 npm install
 npm run dev
 npm run build
-npm run lint
-npm run format:check
 npm run test
 npm run test:run
 npm run test:coverage
